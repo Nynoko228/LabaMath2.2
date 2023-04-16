@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import numpy
 
 
 def BuildSpline(x, y, n):
@@ -30,6 +31,7 @@ def BuildSpline(x, y, n):
     pc = 4
     X = [0 for i in range(pc*n+1)]
     Y = [0 for i in range(pc * n + 1)]
+    xs = numpy.linspace(-2, 4, 18)
     X[0] = x[0]
     Y[0] = y[0]
 
@@ -42,8 +44,9 @@ def BuildSpline(x, y, n):
             # Y[j*pc+i] = (y[j-1]*((x[i]-X[j*pc+i])/h)) + (y[j]*(X[j*pc+i]-x[j-1])/h) + ((Y2[j-1]*pow(((x[j])-X[j*pc+i]), 3) - pow(h, 2) * (x[j]-X[j*pc+i])) / 6*h) + ((Y2[j]*pow((X[j*pc+i]-(x[j-1])), 3) - pow(h, 2) * (X[j*pc+i]-(x[j-1]))) / 6*h)
             # Y[j*pc+i] = (y[j-1]*((x[i]-X[j*pc+i])/h)) + (y[j]*(X[j*pc+i]-x[j-1])/h) + ((Y2[j-1]*((x[j])-X[j*pc+i])*((x[j])-X[j*pc+i])*((x[j])-X[j*pc+i]) - h * h * (x[j]-X[j*pc+i])) / 6*h) + ((X[j*pc+i]-(x[j-1]))*(X[j*pc+i]-(x[j-1]))*(X[j*pc+i]-(x[j-1])) - h * h * (X[j*pc+i]-(x[j-1]))) / 6*h
             # Y[j*pc+i] = (x[j] - X[j * pc + i]) / h * y[j - 1] + (X[j * pc + i] - x[j - 1]) / h * y[j] + ((x[j] - X[j * pc + i]) * (x[j] - X[j * pc + i]) * (x[j] - X[j * pc + i]) - h * h * (x[j] - X[j * pc + i])) / 6 / h * Y2[j - 1] + ((X[j * pc + i] - x[j - 1]) * (X[j * pc + i] - x[j - 1]) * (X[j * pc + i] - x[j - 1]) - h * h * (X[j * pc + i] - x[j - 1])) / 6 / h * Y2[j]
+            # Y[j*pc+i] = (x[j] - X[j * pc + i]) / h * y[j - 1] + (X[j * pc + i] - x[j - 1]) / h * y[j] + ((x[j] - X[j * pc + i]) * (x[j] - X[j * pc + i]) * (x[j] - X[j * pc + i]) - h * h * (x[j] - X[j * pc + i])) / 6 / h * Y2[j - 1] + ((X[j * pc + i] - x[j - 1]) * (X[j * pc + i] - x[j - 1]) * (X[j * pc + i] - x[j - 1]) - h * h * (X[j * pc + i] - x[j - 1])) / 6 / h * Y2[j]
             Y[j*pc+i] = (x[j] - X[j * pc + i]) / h * y[j - 1] + (X[j * pc + i] - x[j - 1]) / h * y[j] + ((x[j] - X[j * pc + i]) * (x[j] - X[j * pc + i]) * (x[j] - X[j * pc + i]) - h * h * (x[j] - X[j * pc + i])) / 6 / h * Y2[j - 1] + ((X[j * pc + i] - x[j - 1]) * (X[j * pc + i] - x[j - 1]) * (X[j * pc + i] - x[j - 1]) - h * h * (X[j * pc + i] - x[j - 1])) / 6 / h * Y2[j]
-            Y[j*pc+i] = round(Y[j*pc+i], 2)
+            # Y[j*pc+i] = round(Y[j*pc+i], 2)
 
     return X[pc:], Y[pc:]
 

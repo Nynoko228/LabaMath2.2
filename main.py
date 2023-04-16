@@ -157,7 +157,7 @@ def HelloWidget(lstx, lsty):
 def BuildSpline(x, y, n):
     x = [float(x[i]) for i in range(len(x))]
     y = [float(y[j]) for j in range(len(y))]
-    m = []
+    # m = []
     Lambda = [0]
     Mu = [0]
     for i in range(1, n-1):
@@ -169,7 +169,7 @@ def BuildSpline(x, y, n):
         Di = ((y[i+1]-y[i])/hi1) - ((y[i]-y[i-1])/hi)
         Lambda.append((-Bi)/(Ai+Ci*Lambda[i-1]))
         Mu.append((Di-Ci*Mu[i-1])/(Ai+Ci*Lambda[i-1]))
-    m.append(Mu[-1])
+    # m.append(Mu[-1])
     Lambda.append(0)
     Mu.append(0)
 
@@ -177,10 +177,10 @@ def BuildSpline(x, y, n):
     #     m.append(Lambda[6-1-i]*m[i] + Mu[6-1-i])
     # print(m)
     #
-    Y2 = [0 for i in range(n)]
+    m = [0 for i in range(n)]
     for i in range(5, 0, -1):
-        Y2[i] = Lambda[i] * Y2[i+1] + Mu[i]
-        Y2[i] = round(Y2[i], 2)
+        m[i] = Lambda[i] * m[i+1] + Mu[i]
+        m[i] = round(m[i], 2)
 
     pc = 6 # Количество точек в интервале
     X = [0 for i in range(pc*n+1)]
@@ -193,7 +193,7 @@ def BuildSpline(x, y, n):
         for i in range(pc+1):
             X[j*pc+i] = h/pc * i + x[j-1]
             X[j*pc+i] = round(X[j*pc+i], 2)
-            Y[j*pc+i] = (x[j] - X[j * pc + i]) / h * y[j - 1] + (X[j * pc + i] - x[j - 1]) / h * y[j] + ((x[j] - X[j * pc + i]) * (x[j] - X[j * pc + i]) * (x[j] - X[j * pc + i]) - h * h * (x[j] - X[j * pc + i])) / 6 / h * Y2[j - 1] + ((X[j * pc + i] - x[j - 1]) * (X[j * pc + i] - x[j - 1]) * (X[j * pc + i] - x[j - 1]) - h * h * (X[j * pc + i] - x[j - 1])) / 6 / h * Y2[j]
+            Y[j*pc+i] = (x[j] - X[j * pc + i]) / h * y[j - 1] + (X[j * pc + i] - x[j - 1]) / h * y[j] + ((x[j] - X[j * pc + i]) * (x[j] - X[j * pc + i]) * (x[j] - X[j * pc + i]) - h * h * (x[j] - X[j * pc + i])) / 6 / h * m[j - 1] + ((X[j * pc + i] - x[j - 1]) * (X[j * pc + i] - x[j - 1]) * (X[j * pc + i] - x[j - 1]) - h * h * (X[j * pc + i] - x[j - 1])) / 6 / h * m[j]
             Y[j*pc+i] = round(Y[j*pc+i], 2)
 
     return X[pc:], Y[pc:]
