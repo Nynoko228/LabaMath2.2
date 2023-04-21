@@ -210,15 +210,17 @@ def BuildSpline(x, y, n):
 # Функция draw рисует наши кривые на координатной плоскости
 def draw(data_x, data_y_new, data_y_old, data_x_new):
     global x, y
+    a = x
+    b = y
     # spl = CubicSpline(x, y)
     # spl = UnivariateSpline(x, y)
     # x1 = numpy.linspace(-2, 4, 30)
     # plt.plot(x1, data_y_new, label="подгоночная кривая", color="black")
     plt.scatter(x, y)
     plt.plot(x, y, label="Табличные данные")
-    x, y, fin = BuildSpline(x, y, len(y))
+    a, b, fin = BuildSpline(x, y, len(y))
 
-    plt.plot(x, y, label="Интерполяция", color="black")
+    plt.plot(a, b, label="Интерполяция", color="black")
 
 # print("Введите номер таблицы: ", end="")
 # table = int(input())
