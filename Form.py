@@ -17,6 +17,7 @@ class Application(tk.Frame):
 
     def createWidgets(self):
         image = []
+        image_window = []
         for i in range(len(self.fin)):
             # Creating buffer for storing image in memory
             buffer = BytesIO()
@@ -28,6 +29,6 @@ class Application(tk.Frame):
             pimage = Image.open(buffer)
             # Creating PhotoImage object from Pillow image object
             image += [ImageTk.PhotoImage(pimage)]
-            image_window = ScrollableImage(self.master, image=image[i], scrollbarwidth=9,
-                                           width=1300, height=100)
-            image_window.pack()
+        image_window = (ScrollableImage(self.master, image=image, scrollbarwidth=9,
+                                           width=1300, height=100))
+        image_window.pack()

@@ -12,8 +12,8 @@ import tkinter as tk  # для интерфейса
 
 
 def formula():
-    global x, y
-    fin = []
+    global x, y, fin
+    x, y, fin = BuildSpline(x, y, len(y))
     fin += [r"$S_{3}=y_{i-1}\frac{x_{i}-x}{h_{i}}+y_{i}\frac{x-x_{i-1}}{h_{i}}+\frac{(x_{i}-x)^{3}-h_{i}^{2}(x_{i}-x)}{6h_{i}}m_{i-1}+\frac{(x-x_{i-1})^{3}-h_{i}^{2}(x-x_{i-1})}{6h_{i}}m_{i}$"]
     fin += [r"$S_{3}^{'}(x_{i}+0)=-\frac{h_{i+1}}{3}m_{i}-\frac{h_{i+1}}{6}m_{i+1}+\frac{y_{i+1}-y_{i}}{h_{i+1}}$"]
     fin += [r"$S_{3}^{'}(x_{i}-0)=\frac{h_{i}}{6}m_{i-1}-\frac{h_{i}}{3}m_{i}+\frac{y_{i}-y_{i-1}}{h_{i}}$"]
@@ -157,6 +157,7 @@ def HelloWidget(lstx, lsty):
 def BuildSpline(x, y, n):
     x = [float(x[i]) for i in range(len(x))]
     y = [float(y[j]) for j in range(len(y))]
+    fin = []
     m = []
     Lambda = [0]
     Mu = [0]
@@ -193,10 +194,11 @@ def BuildSpline(x, y, n):
         for i in range(pc+1):
             X[j*pc+i] = h/pc * i + x[j-1]
             X[j*pc+i] = round(X[j*pc+i], 2)
+            fin += [rf"$S_{3}({X[j*pc+i]})=({x[j]} - {X[j * pc + i]}) / {h} + ({X[j * pc + i]} - {x[j - 1]}) / {h} * {y[j]} + (({x[j]} - {X[j * pc + i]})^3) - {h}^2 * ({x[j]} - {X[j * pc + i]})) / 6{h} * {Y2[j - 1]} + (({X[j * pc + i]} - {x[j - 1]})^3) - {h}^2* ({X[j * pc + i]} - {x[j - 1]})) / 6{h} * {Y2[j]}$"]
             Y[j*pc+i] = (x[j] - X[j * pc + i]) / h * y[j - 1] + (X[j * pc + i] - x[j - 1]) / h * y[j] + ((x[j] - X[j * pc + i]) * (x[j] - X[j * pc + i]) * (x[j] - X[j * pc + i]) - h * h * (x[j] - X[j * pc + i])) / 6 / h * Y2[j - 1] + ((X[j * pc + i] - x[j - 1]) * (X[j * pc + i] - x[j - 1]) * (X[j * pc + i] - x[j - 1]) - h * h * (X[j * pc + i] - x[j - 1])) / 6 / h * Y2[j]
             Y[j*pc+i] = round(Y[j*pc+i], 2)
 
-    return X[pc:], Y[pc:]
+    return X[pc:], Y[pc:], fin
 
 
 # Функция draw рисует наши кривые на координатной плоскости
@@ -208,13 +210,14 @@ def draw(data_x, data_y_new, data_y_old, data_x_new):
     # plt.plot(x1, data_y_new, label="подгоночная кривая", color="black")
     plt.scatter(x, y)
     plt.plot(x, y, label="Табличные данные")
-    x, y = BuildSpline(x, y, len(y))
+    x, y, fin = BuildSpline(x, y, len(y))
 
     plt.plot(x, y, label="Интерполяция", color="black")
 
 # print("Введите номер таблицы: ", end="")
 # table = int(input())
 table = 8
+fin = []
 match table:
     case 0:
         x = ""
