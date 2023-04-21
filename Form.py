@@ -13,6 +13,8 @@ class Application(tk.Frame):
         self.fin = f
         self.createWidgets()
 
+
+
     def createWidgets(self):
         image = []
         for i in range(len(self.fin)):
@@ -20,7 +22,7 @@ class Application(tk.Frame):
             buffer = BytesIO()
             # Writing png image with our rendered greek alpha to buffer
             math_to_image(self.fin[i], buffer, dpi=250, format='png')
-            # Remoting buffer to 0, so that we can read from it
+            # Remoting bufeer to 0, so that we can read from it
             buffer.seek(0)
             # Creating Pillow image object from it
             pimage = Image.open(buffer)
