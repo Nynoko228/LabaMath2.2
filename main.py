@@ -195,13 +195,24 @@ def BuildSpline(x, y, n):
 
     for j in range(1, n):
         h = x[j] - x[j - 1]
+        cnt = 0
         for i in range(pc+1):
             X[j*pc+i] = h/pc * i + x[j-1]
             X[j*pc+i] = round(X[j*pc+i], 2)
             # fin += [rf"$\frac{{{X[j*pc+i]}-{x[j]}}}{{{x[j]}}}$"]
-            fin += [rf"$S_{3}({X[j*pc+i]})={y[j - 1]}\frac{{({x[j]} - ({X[j * pc + i]}))}}{{{h}}} + ({y[j]})\frac{{({X[j * pc + i]} - ({x[j - 1]}))}}{{{h}}} + ({Y2[j - 1]})\frac{{({x[j]} - ({X[j * pc + i]}))^3 - ({h})^2  ({x[j]} - ({X[j * pc + i]}))}}{{(6*({h}))}} + ({Y2[j]})\frac{{({X[j * pc + i]} - ({x[j - 1]}))^3 - ({h})^2 ({X[j * pc + i]} - ({x[j - 1]}))}}{{6*({h})}}$"]
+            # fin += [rf"$S_{3}({X[j*pc+i]})={y[j - 1]}\frac{{({x[j]} - ({X[j * pc + i]}))}}{{{h}}} + ({y[j]})\frac{{({X[j * pc + i]} - ({x[j - 1]}))}}{{{h}}} + ({Y2[j - 1]})\frac{{({x[j]} - ({X[j * pc + i]}))^3 - ({h})^2  ({x[j]} - ({X[j * pc + i]}))}}{{(6*({h}))}} + ({Y2[j]})\frac{{({X[j * pc + i]} - ({x[j - 1]}))^3 - ({h})^2 ({X[j * pc + i]} - ({x[j - 1]}))}}{{6*({h})}}$"]
             Y[j*pc+i] = (x[j] - X[j * pc + i]) / h * y[j - 1] + (X[j * pc + i] - x[j - 1]) / h * y[j] + ((x[j] - X[j * pc + i]) * (x[j] - X[j * pc + i]) * (x[j] - X[j * pc + i]) - h * h * (x[j] - X[j * pc + i])) / 6 / h * Y2[j - 1] + ((X[j * pc + i] - x[j - 1]) * (X[j * pc + i] - x[j - 1]) * (X[j * pc + i] - x[j - 1]) - h * h * (X[j * pc + i] - x[j - 1])) / 6 / h * Y2[j]
             Y[j*pc+i] = round(Y[j*pc+i], 2)
+            if ((X[j*pc+i]==x[j-1]) and (cnt == 0)):
+                cnt += 1
+                print("Y: ", Y[j*pc+i])
+                fin += [
+                    rf"$S_{3}({X[j * pc + i]})={y[j - 1]}\frac{{({x[j]} - ({X[j * pc + i]}))}}{{{h}}} + ({y[j]})\frac{{({X[j * pc + i]} - ({x[j - 1]}))}}{{{h}}} + ({Y2[j - 1]})\frac{{({x[j]} - ({X[j * pc + i]}))^3 - ({h})^2  ({x[j]} - ({X[j * pc + i]}))}}{{(6*({h}))}} + ({Y2[j]})\frac{{({X[j * pc + i]} - ({x[j - 1]}))^3 - ({h})^2 ({X[j * pc + i]} - ({x[j - 1]}))}}{{6*({h})}}$"]
+            if ((X[j*pc+i]==x[n-1])):
+                print("Y: ", Y[j*pc+i])
+                cnt += 1
+                fin += [
+                    rf"$S_{3}({X[j * pc + i]})={y[j - 1]}\frac{{({x[j]} - ({X[j * pc + i]}))}}{{{h}}} + ({y[j]})\frac{{({X[j * pc + i]} - ({x[j - 1]}))}}{{{h}}} + ({Y2[j - 1]})\frac{{({x[j]} - ({X[j * pc + i]}))^3 - ({h})^2  ({x[j]} - ({X[j * pc + i]}))}}{{(6*({h}))}} + ({Y2[j]})\frac{{({X[j * pc + i]} - ({x[j - 1]}))^3 - ({h})^2 ({X[j * pc + i]} - ({x[j - 1]}))}}{{6*({h})}}$"]
 
     print(len(Y[pc:]))
     return X[pc:], Y[pc:], fin

@@ -30,5 +30,5 @@ class Application(tk.Frame):
             # Creating PhotoImage object from Pillow image object
             image += [ImageTk.PhotoImage(pimage)]
         image_window = (ScrollableImage(self.master, image=image, scrollbarwidth=9,
-                                           width=1300, height=1000))
+                                           width=1600, height=1000))
         image_window.pack()
