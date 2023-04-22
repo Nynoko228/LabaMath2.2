@@ -172,9 +172,12 @@ def BuildSpline(x, y, n):
         Ai = (hi+hi1)/3
         Bi = hi1/6
         Di = ((y[i+1]-y[i])/hi1) - ((y[i]-y[i-1])/hi)
+        if (y[i]==0):
+            print((-Bi)/(Ai+Ci*Lambda[i-1]), Mu[i-1])
         Lambda.append((-Bi)/(Ai+Ci*Lambda[i-1]))
         Mu.append((Di-Ci*Mu[i-1])/(Ai+Ci*Lambda[i-1]))
     m.append(Mu[-1])
+
     Lambda.append(0)
     Mu.append(0)
 
@@ -186,13 +189,15 @@ def BuildSpline(x, y, n):
     for i in range(5, 0, -1):
         Y2[i] = Lambda[i] * Y2[i+1] + Mu[i]
         Y2[i] = round(Y2[i], 2)
-
+    print("Y2", Y2)
     pc = 6 # Количество точек в интервале
     X = [0 for i in range(pc*n+1)]
     Y = [0 for i in range(pc * n + 1)]
     X[0] = x[0]
     Y[0] = y[0]
-
+    fin += [r"$S_{3}=y_{i-1}\frac{x_{i}-x}{h_{i}}+y_{i}\frac{x-x_{i-1}}{h_{i}}+\frac{(x_{i}-x)^{3}-h_{i}^{2}(x_{i}-x)}{6h_{i}}m_{i-1}+\frac{(x-x_{i-1})^{3}-h_{i}^{2}(x-x_{i-1})}{6h_{i}}m_{i}$"]
+    # fin += [r"$S_{3}^{'}(x_{i}+0)=-\frac{h_{i+1}}{3}m_{i}-\frac{h_{i+1}}{6}m_{i+1}+\frac{y_{i+1}-y_{i}}{h_{i+1}}$"]
+    # fin += [r"$S_{3}^{'}(x_{i}-0)=\frac{h_{i}}{6}m_{i-1}-\frac{h_{i}}{3}m_{i}+\frac{y_{i}-y_{i-1}}{h_{i}}$"]
     for j in range(1, n):
         h = x[j] - x[j - 1]
         cnt = 0
@@ -203,7 +208,7 @@ def BuildSpline(x, y, n):
             # fin += [rf"$S_{3}({X[j*pc+i]})={y[j - 1]}\frac{{({x[j]} - ({X[j * pc + i]}))}}{{{h}}} + ({y[j]})\frac{{({X[j * pc + i]} - ({x[j - 1]}))}}{{{h}}} + ({Y2[j - 1]})\frac{{({x[j]} - ({X[j * pc + i]}))^3 - ({h})^2  ({x[j]} - ({X[j * pc + i]}))}}{{(6*({h}))}} + ({Y2[j]})\frac{{({X[j * pc + i]} - ({x[j - 1]}))^3 - ({h})^2 ({X[j * pc + i]} - ({x[j - 1]}))}}{{6*({h})}}$"]
             Y[j*pc+i] = (x[j] - X[j * pc + i]) / h * y[j - 1] + (X[j * pc + i] - x[j - 1]) / h * y[j] + ((x[j] - X[j * pc + i]) * (x[j] - X[j * pc + i]) * (x[j] - X[j * pc + i]) - h * h * (x[j] - X[j * pc + i])) / 6 / h * Y2[j - 1] + ((X[j * pc + i] - x[j - 1]) * (X[j * pc + i] - x[j - 1]) * (X[j * pc + i] - x[j - 1]) - h * h * (X[j * pc + i] - x[j - 1])) / 6 / h * Y2[j]
             Y[j*pc+i] = round(Y[j*pc+i], 2)
-            if ((X[j*pc+i]==x[j-1]) and (cnt == 0)):
+            if ((X[j*pc+i]==x[j-1])):
                 cnt += 1
                 print("Y: ", Y[j*pc+i])
                 fin += [
